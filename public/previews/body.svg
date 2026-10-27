@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bodyGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48cae4"/>
+      <stop offset="50%" stop-color="#0096c7"/>
+      <stop offset="100%" stop-color="#023e8a"/>
+    </linearGradient>
+    <linearGradient id="boneLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa"/>
+      <stop offset="100%" stop-color="#dee2e6"/>
+    </linearGradient>
+    <filter id="humanGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00b4d8" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  
+  <!-- Silhouette / Écorché outline -->
+  <g filter="url(#humanGlow)">
+    <!-- Head -->
+    <ellipse cx="100" cy="30" rx="14" ry="18" fill="url(#boneLight)" stroke="#0096c7" stroke-width="1.5"/>
+    <circle cx="95" cy="28" r="2.5" fill="#023e8a"/>
+    <circle cx="105" cy="28" r="2.5" fill="#023e8a"/>
+
+    <!-- Neck & Spine -->
+    <line x1="100" y1="48" x2="100" y2="115" stroke="#0077b6" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Ribcage / Thorax -->
+    <path d="M 80 60 C 80 52, 120 52, 120 60 C 125 80, 115 95, 100 95 C 85 95, 75 80, 80 60 Z" fill="none" stroke="url(#bodyGlow)" stroke-width="2.5"/>
+    <line x1="84" y1="66" x2="116" y2="66" stroke="#90e0ef" stroke-width="1.5"/>
+    <line x1="82" y1="74" x2="118" y2="74" stroke="#90e0ef" stroke-width="1.5"/>
+    <line x1="85" y1="82" x2="115" y2="82" stroke="#90e0ef" stroke-width="1.5"/>
+
+    <!-- Heart icon in chest -->
+    <circle cx="104" cy="72" r="4.5" fill="#e63946"/>
+
+    <!-- Shoulders & Arms -->
+    <!-- Clavicle -->
+    <path d="M 72 56 Q 100 52 128 56" stroke="#caf0f8" stroke-width="3" fill="none"/>
+    <!-- Left Arm -->
+    <path d="M 72 56 L 62 90 L 55 125" stroke="url(#bodyGlow)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <circle cx="55" cy="128" r="3.5" fill="#90e0ef"/>
+    <!-- Right Arm -->
+    <path d="M 128 56 L 138 90 L 145 125" stroke="url(#bodyGlow)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <circle cx="145" cy="128" r="3.5" fill="#90e0ef"/>
+
+    <!-- Pelvis / Hips -->
+    <path d="M 82 115 Q 100 122 118 115 L 112 130 Q 100 135 88 130 Z" fill="url(#bodyGlow)"/>
+
+    <!-- Left Leg -->
+    <path d="M 88 130 L 85 160 L 82 188" stroke="url(#bodyGlow)" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M 82 188 L 76 192" stroke="#90e0ef" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Right Leg -->
+    <path d="M 112 130 L 115 160 L 118 188" stroke="url(#bodyGlow)" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M 118 188 L 124 192" stroke="#90e0ef" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Futuristic HUD Rings -->
+  <circle cx="100" cy="100" r="92" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4,4" fill="none" opacity="0.4"/>
+</svg>

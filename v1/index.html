@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Human Anatomy Visualizer - Pro Edition">
+    <title>Human Anatomy Visualizer</title>
+    <style>
+        /* --- DESIGN TOKENS --- */
+        :root {
+            --bg-main: #050505;
+            --glass-surface: rgba(30, 35, 45, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #9ba7b6;
+            --accent-cyan: #64ffda;
+            --accent-pink: #f472b6;
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: var(--font-stack);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND FX --- */
+        .liquid-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; background: var(--bg-main);
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute; border-radius: 50%; opacity: 0.3;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #1e3a8a; }
+        .blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #3730a3; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        /* --- LOGIN OVERLAY --- */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5000;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.5s ease;
+        }
+
+        .login-card {
+            width: 90%; max-width: 400px;
+            background: rgba(20, 20, 25, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-btn {
+            width: 100%; padding: 15px; margin-top: 20px;
+            background: white; color: black; font-weight: bold;
+            border: none; border-radius: 12px; cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .login-btn:hover { transform: scale(1.02); }
+
+        .glass-input {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: white; border-radius: 8px; box-sizing: border-box;
+        }
+
+        /* --- MAIN APP --- */
+        #main-app { display: none; opacity: 0; transition: opacity 0.8s ease; }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; max-width: 1200px; margin: 0 auto;
+        }
+        .logout-btn {
+            background: transparent; border: 1px solid var(--glass-border);
+            color: var(--text-secondary); padding: 8px 16px; border-radius: 20px;
+            cursor: pointer; font-size: 0.8rem;
+        }
+        .logout-btn:hover { border-color: white; color: white; }
+
+        header { text-align: center; padding: 80px 20px 40px; }
+        h1 { font-size: 3.5rem; margin: 0; letter-spacing: -2px; }
+        
+        /* --- GRID SYSTEM --- */
+        main { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
+        
+        .section-label {
+            margin: 60px 0 20px; font-size: 1.2rem; color: var(--accent-cyan);
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;
+        }
+
+        .grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 20px;
+            text-decoration: none; color: inherit;
+            transition: transform 0.3s, background 0.3s;
+            display: flex; flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(40, 45, 60, 0.8);
+            border-color: var(--glass-highlight);
+        }
+
+        .icon-box {
+            height: 140px; background: rgba(0,0,0,0.2);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; margin-bottom: 15px;
+        }
+
+        h3 { margin: 0 0 5px; }
+        p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* Loader */
+        #loader {
+            position: fixed; inset: 0; z-index: 6000; background: black;
+            display: none; align-items: center; justify-content: center;
+        }
+
+        /* --- BIO-ID LOGO STYLES --- */
+        .bio-id-logo-container {
+            position: relative; width: 80px; height: 80px; margin: 0 auto 25px auto; 
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.1); 
+        }
+
+        .bio-id-icon { width: 40px; height: 40px; color: var(--accent-cyan); z-index: 2; }
+
+        .logo-glow {
+            position: absolute; width: 30px; height: 30px;
+            background: var(--accent-cyan); border-radius: 50%;
+            filter: blur(20px); opacity: 0.4; z-index: 1;
+            animation: bioPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes bioPulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <div class="bio-id-logo-container">
+                <svg class="bio-id-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 8V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M9 10C9 10 7 11 7 12C7 13 9 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M15 10C15 10 17 11 17 12C17 13 15 14 15 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                </svg>
+                <div class="logo-glow"></div>
+            </div>
+            <h2>Identity Verification</h2>
+            <p style="color:var(--text-secondary); margin-bottom:20px;">Secure Medical Database Access</p>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" class="glass-input" placeholder="User ID" required>
+                <input type="password" class="glass-input" placeholder="Passcode" required>
+                <button type="submit" class="login-btn">Authenticate</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loader">
+        <div style="text-align:center; color: var(--accent-cyan);">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+            <p>Loading Assets...</p>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <nav>
+            <div style="font-weight:700; font-size:1.2rem;">Anatomy<span style="color:var(--accent-cyan)">.Visualizer</span></div>
+            <button onclick="handleLogout()" class="logout-btn">Log Out</button>
+        </nav>
+
+        <header>
+            <h1>Select a Region</h1>
+            <p style="color:var(--text-secondary)">Database loaded. <span id="model-count">0</span> models available.</p>
+        </header>
+
+        <main id="content-area">
+            </main>
+    </div>
+
+    <script>
+        // --- 1. MODEL CONFIGURATION ---
+        // To add a new model, simply add an entry to this list.
+        // Filename matches your .glb file in the 'models' folder (without .glb extension)
+        const modelsDB = [
+            // SURFACE & CONTROL
+            { id: 'skin', name: 'Dermis / Skin', cat: 'Surface & Control', icon: '✋', color: '#e2a088', desc: 'Epidermis layers, hair follicles, and sweat glands.' },
+            { id: 'brain', name: 'Brain', cat: 'Surface & Control', icon: '🧠', color: '#f472b6', desc: 'Cerebrum, cerebellum, and brainstem structures.' },
+            { id: 'neuron', name: 'Neuron', cat: 'Surface & Control', icon: '⚡', color: '#64ffda', desc: 'Detailed axon terminals, dendrites, and synapses.' },
+            { id: 'eye', name: 'Human Eye', cat: 'Surface & Control', icon: '👁️', color: '#60a5fa', desc: 'Cornea, retina, lens mechanics, and optic nerve.' },
+
+            // VISCERAL SYSTEMS
+            { id: 'heart', name: 'Heart', cat: 'Visceral Systems', icon: '🫀', color: '#ef4444', desc: '4-Chamber view with aortic and venous flow.' },
+            { id: 'lungs', name: 'Lungs', cat: 'Visceral Systems', icon: '💨', color: '#fca5a5', desc: 'Bronchial tree, lobes, and alveoli structure.' },
+            { id: 'stomach', name: 'Stomach', cat: 'Visceral Systems', icon: '🥣', color: '#fdba74', desc: 'Gastric layers, esophagus, and duodenum.' },
+            { id: 'liver', name: 'Liver', cat: 'Visceral Systems', icon: '🧱', color: '#78350f', desc: 'Hepatic lobes, gallbladder, and bile ducts.' },
+            { id: 'kidney', name: 'Kidneys', cat: 'Visceral Systems', icon: '🥜', color: '#b45309', desc: 'Renal cortex, medulla, and ureter connection.' },
+
+            // MUSCULOSKELETAL
+            { id: 'skull', name: 'Skull', cat: 'Musculoskeletal', icon: '💀', color: '#e5e5e5', desc: 'Cranial plates, mandible, and facial bones.' },
+            { id: 'skeleton_full', name: 'Full Skeleton', cat: 'Musculoskeletal', icon: '🦴', color: '#d4d4d4', desc: 'Axial and appendicular skeletal overview.' },
+            { id: 'muscle', name: 'Musculature', cat: 'Musculoskeletal', icon: '💪', color: '#991b1b', desc: 'Myofibrils, tendons, and muscle group layering.' },
+
+            // SENSORY
+            { id: 'ear', name: 'Inner Ear', cat: 'Sensory', icon: '👂', color: '#d6bcfa', desc: 'Cochlea, anvil, hammer, and stirrup bones.' }
+        ];
+
+        // --- 2. DYNAMIC GENERATION LOGIC ---
+        function renderModels() {
+            const container = document.getElementById('content-area');
+            const countDisplay = document.getElementById('model-count');
+            container.innerHTML = ''; // Clear existing
+            countDisplay.innerText = modelsDB.length;
+
+            // Group models by category
+            const categories = {};
+            
+            modelsDB.forEach(model => {
+                if (!categories[model.cat]) {
+                    categories[model.cat] = [];
+                }
+                categories[model.cat].push(model);
+            });
+
+            // Iterate through categories and build HTML
+            for (const [catName, models] of Object.entries(categories)) {
+                
+                // Create Section Header
+                const sectionHeader = document.createElement('div');
+                sectionHeader.className = 'section-label';
+                sectionHeader.innerText = catName;
+                container.appendChild(sectionHeader);
+
+                // Create Grid
+                const grid = document.createElement('div');
+                grid.className = 'grid';
+
+                // Create Cards
+                models.forEach(model => {
+                    const card = document.createElement('a');
+                    // Point to the viewer with the specific model parameter
+                    card.href = `viewer.html?model=models/${model.id}.glb`; 
+                    card.className = 'card';
+                    
+                    card.innerHTML = `
+                        <div class="icon-box" style="color: ${model.color};">
+                            ${model.icon}
+                        </div>
+                        <h3>${model.name}</h3>
+                        <p>${model.desc}</p>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                container.appendChild(grid);
+            }
+        }
+
+        // --- 3. LOGIN & AUTH LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('anatomyApp_auth');
+            
+            if (isLoggedIn === 'true') {
+                document.getElementById('login-overlay').style.display = 'none';
+                renderModels(); // Generate content
+                revealApp();
+            } else {
+                document.getElementById('login-overlay').style.display = 'flex';
+            }
+        });
+
+        function handleLogin(e) {
+            e.preventDefault(); 
+            const loginOverlay = document.getElementById('login-overlay');
+            const loader = document.getElementById('loader');
+
+            localStorage.setItem('anatomyApp_auth', 'true');
+
+            loginOverlay.style.opacity = '0';
+            
+            setTimeout(() => {
+                loginOverlay.style.display = 'none';
+                loader.style.display = 'flex';
+                
+                setTimeout(() => {
+                    renderModels(); // Generate content before showing
+                    loader.style.display = 'none';
+                    revealApp();
+                }, 800); 
+            }, 500); 
+        }
+
+        function revealApp() {
+            const mainApp = document.getElementById('main-app');
+            mainApp.style.display = 'block';
+            requestAnimationFrame(() => {
+                mainApp.style.opacity = '1';
+            });
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('anatomyApp_auth');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

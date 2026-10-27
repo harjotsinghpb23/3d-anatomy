@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="scleraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#e9ecef"/>
+      <stop offset="100%" stop-color="#ced4da"/>
+    </linearGradient>
+    <linearGradient id="irisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48cae4"/>
+      <stop offset="50%" stop-color="#0096c7"/>
+      <stop offset="100%" stop-color="#023e8a"/>
+    </linearGradient>
+    <filter id="eyeShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <!-- Optic Nerve (posterior) -->
+  <path d="M 140 92 Q 170 90 180 85 L 182 105 Q 170 102 140 104 Z" fill="#e9c46a"/>
+  <!-- Eyeball Outer Wall (Sclera) -->
+  <circle cx="95" cy="98" r="58" fill="url(#scleraGrad)" filter="url(#eyeShadow)"/>
+  <!-- Retina / Choroid lining (cross-section hint) -->
+  <path d="M 95 40 A 58 58 0 0 1 153 98 A 58 58 0 0 1 95 156" stroke="#e63946" stroke-width="4" fill="none" opacity="0.4"/>
+  <path d="M 95 43 A 55 55 0 0 1 150 98 A 55 55 0 0 1 95 153" stroke="#f4a261" stroke-width="3" fill="none" opacity="0.6"/>
+  <!-- Cornea (anterior bulge) -->
+  <path d="M 45 68 C 28 80, 28 116, 45 128 C 42 108, 42 88, 45 68 Z" fill="#caf0f8" opacity="0.75" stroke="#90e0ef" stroke-width="1.5"/>
+  <!-- Iris -->
+  <ellipse cx="56" cy="98" rx="8" ry="24" fill="url(#irisGrad)"/>
+  <!-- Pupil -->
+  <ellipse cx="54" cy="98" rx="4" ry="12" fill="#03045e"/>
+  <!-- Crystalline Lens -->
+  <ellipse cx="68" cy="98" rx="7" ry="18" fill="#e0fbfc" stroke="#98c1d9" stroke-width="1.5" opacity="0.85"/>
+  <!-- Light Reflection -->
+  <circle cx="50" cy="90" r="3.5" fill="#fff" opacity="0.8"/>
+</svg>

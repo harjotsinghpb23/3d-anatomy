@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human Skeletal System — Interactive 3D</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0e17;
+      color: #e0e6f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #viewer-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #api-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ─── Bone Name Tooltip ─── */
+    #bone-tooltip {
+      position: absolute;
+      display: none;
+      padding: 10px 18px;
+      background: rgba(10, 14, 23, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(99, 102, 241, 0.5);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      pointer-events: none;
+      z-index: 100;
+      transform: translate(-50%, -120%);
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.25);
+    }
+
+    #bone-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      background: rgba(10, 14, 23, 0.92);
+      border-right: 1px solid rgba(99, 102, 241, 0.5);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.5);
+    }
+
+    #bone-tooltip .bone-label {
+      color: #a5b4fc;
+      font-size: 12px;
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ─── Top Bar ─── */
+    #top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: linear-gradient(180deg, rgba(10,14,23,0.95) 0%, transparent 100%);
+      z-index: 50;
+    }
+
+    #top-bar h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    #top-bar h1 span { color: #818cf8; }
+
+    #bone-counter {
+      font-size: 13px;
+      color: #94a3b8;
+      background: rgba(255,255,255,0.08);
+      padding: 5px 14px;
+      border-radius: 20px;
+    }
+
+    /* ─── Instructions ─── */
+    #instructions {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      padding: 10px 24px;
+      background: rgba(10,14,23,0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      z-index: 50;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    #instructions .key {
+      background: rgba(255,255,255,0.12);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #c7d2fe;
+      margin-right: 4px;
+    }
+
+    /* ─── Bone Info Panel ─── */
+    #bone-info-panel {
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      width: 280px;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      background: rgba(10, 14, 23, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      z-index: 60;
+      display: none;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    }
+
+    #bone-info-panel.active { display: block; }
+
+    #bone-info-panel h2 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    #bone-info-panel .bone-type {
+      font-size: 12px;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    #bone-info-panel .bone-description {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    #bone-info-panel .bone-facts {
+      list-style: none;
+      padding: 0;
+    }
+
+    #bone-info-panel .bone-facts li {
+      font-size: 12px;
+      color: #cbd5e1;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    #bone-info-panel .bone-facts li strong { color: #a5b4fc; }
+
+    #close-panel {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #94a3b8;
+      font-size: 18px;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #close-panel:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ─── Loading overlay ─── */
+    #loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: #0a0e17;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      transition: opacity 0.5s ease;
+    }
+
+    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+    .loader-skeleton {
+      font-size: 64px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    #loading-overlay p { margin-top: 16px; color: #94a3b8; font-size: 14px; }
+
+    #bone-info-panel::-webkit-scrollbar { width: 4px; }
+    #bone-info-panel::-webkit-scrollbar-track { background: transparent; }
+    #bone-info-panel::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="viewer-container">
+    <iframe id="api-frame" allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>
+
+    <div id="loading-overlay">
+      <div class="loader-skeleton">🦴</div>
+      <p>Loading Skeletal System...</p>
+    </div>
+
+    <div id="top-bar">
+      <h1>🦴 Human <span>Skeletal System</span></h1>
+      <div id="bone-counter">Click any bone to identify</div>
+    </div>
+
+    <div id="bone-tooltip"></div>
+
+    <div id="bone-info-panel">
+      <button id="close-panel" onclick="document.getElementById('bone-info-panel').classList.remove('active')">✕</button>
+      <h2 id="panel-bone-name"></h2>
+      <div class="bone-type" id="panel-bone-type"></div>
+      <div class="bone-description" id="panel-bone-desc"></div>
+      <ul class="bone-facts" id="panel-bone-facts"></ul>
+    </div>
+
+    <div id="instructions">
+      <span><span class="key">Click</span> Identify bone</span>
+      <span><span class="key">Drag</span> Rotate</span>
+      <span><span class="key">Scroll</span> Zoom</span>
+      <span><span class="key">Right-click</span> Pan</span>
+    </div>
+  </div>
+
+  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+  <script>
+    // ─── Bone Knowledge Database ───
+    var BONE_DB = {
+      'cranium': { name: 'Cranium (Skull)', type: 'Axial Skeleton', desc: 'The cranium is the bony structure that encloses and protects the brain. It consists of 8 cranial bones fused at sutures.', facts: ['Bones: Frontal, Parietal x2, Temporal x2, Occipital, Sphenoid, Ethmoid', 'Function: Brain protection', 'Sutures: Coronal, Sagittal, Lambdoid, Squamous'] },
+      'skull': { name: 'Skull', type: 'Axial Skeleton', desc: 'The skull consists of 22 bones: 8 cranial bones protecting the brain and 14 facial bones forming the face.', facts: ['Total bones: 22', 'Only movable bone: Mandible', 'Protects: Brain, eyes, inner ear'] },
+      'frontal': { name: 'Frontal Bone', type: 'Axial — Cranial', desc: 'Forms the forehead and the roof of the eye sockets (orbits).', facts: ['Location: Anterior skull', 'Contains: Frontal sinuses', 'Articulates with: Parietal, Sphenoid, Ethmoid, Nasal, Maxilla, Zygomatic'] },
+      'parietal': { name: 'Parietal Bone', type: 'Axial — Cranial', desc: 'Paired bones forming the superior and lateral walls of the cranium.', facts: ['Count: 2 (left and right)', 'Joined at: Sagittal suture', 'Location: Superior lateral skull'] },
+      'temporal': { name: 'Temporal Bone', type: 'Axial — Cranial', desc: 'Contains the structures of the ear and the temporomandibular joint (TMJ).', facts: ['Contains: Middle and inner ear', 'Features: Mastoid process, Styloid process, Zygomatic process', 'Location: Lateral skull'] },
+      'occipital': { name: 'Occipital Bone', type: 'Axial — Cranial', desc: 'Forms the posterior and inferior part of the cranium. Contains the foramen magnum where the spinal cord passes.', facts: ['Key feature: Foramen magnum', 'Articulates with: Atlas (C1)', 'Location: Posterior skull'] },
+      'sphenoid': { name: 'Sphenoid Bone', type: 'Axial — Cranial', desc: 'Butterfly-shaped bone at the skull base. Houses the pituitary gland in the sella turcica.', facts: ['Shape: Butterfly / bat-wing', 'Contains: Sella turcica (pituitary fossa)', 'Articulates with: All other cranial bones'] },
+      'ethmoid': { name: 'Ethmoid Bone', type: 'Axial — Cranial', desc: 'Located between the eye sockets, forms part of the nasal cavity roof.', facts: ['Contains: Ethmoid sinuses, Cribriform plate', 'Function: Olfactory nerve passage', 'Location: Between orbits'] },
+      'mandible': { name: 'Mandible (Lower Jaw)', type: 'Axial — Facial', desc: 'The largest and strongest facial bone. The only movable skull bone, forming the lower jaw.', facts: ['Function: Chewing (mastication)', 'Only movable skull bone', 'Parts: Body, Ramus, Condyle, Coronoid process'] },
+      'maxilla': { name: 'Maxilla (Upper Jaw)', type: 'Axial — Facial', desc: 'Paired bones forming the upper jaw, hard palate, and floor of the eye sockets.', facts: ['Contains: Upper teeth, Maxillary sinuses', 'Forms: Hard palate (anterior part)', 'Count: 2 (fused at midline)'] },
+      'zygomatic': { name: 'Zygomatic Bone (Cheekbone)', type: 'Axial — Facial', desc: 'Forms the prominence of the cheek and part of the lateral orbit wall.', facts: ['Common name: Cheekbone', 'Forms: Zygomatic arch (with temporal bone)', 'Location: Lateral face'] },
+      'nasal': { name: 'Nasal Bone', type: 'Axial — Facial', desc: 'Small paired bones forming the bridge of the nose.', facts: ['Count: 2', 'Location: Bridge of nose', 'Among the smallest facial bones'] },
+      'hyoid': { name: 'Hyoid Bone', type: 'Axial Skeleton', desc: 'U-shaped bone in the neck. The only bone that does not articulate with any other bone.', facts: ['Location: Anterior neck at C3 level', 'Unique: Only bone with no bony joint', 'Function: Tongue support, swallowing, speech'] },
+      'vertebra': { name: 'Vertebra', type: 'Axial — Spine', desc: 'Individual bone of the spinal column. 33 vertebrae form the vertebral column.', facts: ['Total: 33 vertebrae', 'Cervical 7, Thoracic 12, Lumbar 5, Sacral 5, Coccygeal 4', 'Function: Support, spinal cord protection'] },
+      'cervical': { name: 'Cervical Vertebra', type: 'Axial — Spine', desc: 'One of 7 cervical vertebrae (C1-C7) in the neck. C1 (Atlas) and C2 (Axis) are specialized.', facts: ['Count: 7 (C1-C7)', 'C1 Atlas: supports skull, allows nodding', 'C2 Axis: allows head rotation'] },
+      'atlas': { name: 'Atlas (C1)', type: 'Axial — Cervical', desc: 'First cervical vertebra. Supports the skull, named after the Greek Titan.', facts: ['Allows: Nodding motion (flexion/extension)', 'No vertebral body', 'Articulates with: Occipital condyles'] },
+      'axis': { name: 'Axis (C2)', type: 'Axial — Cervical', desc: 'Second cervical vertebra with the dens (odontoid process) acting as a pivot.', facts: ['Key feature: Dens (odontoid process)', 'Allows: Head rotation (left/right)', 'Pivot joint with Atlas'] },
+      'thoracic': { name: 'Thoracic Vertebra', type: 'Axial — Spine', desc: 'One of 12 thoracic vertebrae (T1-T12). Each articulates with a pair of ribs.', facts: ['Count: 12 (T1-T12)', 'Feature: Costal facets for rib attachment', 'Region: Mid-back (kyphotic curve)'] },
+      'lumbar': { name: 'Lumbar Vertebra', type: 'Axial — Spine', desc: 'One of 5 lumbar vertebrae (L1-L5). The largest vertebrae, built for weight bearing.', facts: ['Count: 5 (L1-L5)', 'Largest vertebrae in the spine', 'Region: Lower back (lordotic curve)'] },
+      'sacrum': { name: 'Sacrum', type: 'Axial — Spine', desc: 'Triangular bone of 5 fused vertebrae connecting the spine to the pelvis.', facts: ['Fused vertebrae: 5', 'Articulates with: L5, Coccyx, Ilium', 'Transmits body weight to pelvis'] },
+      'coccyx': { name: 'Coccyx (Tailbone)', type: 'Axial — Spine', desc: 'Terminal end of the spine, formed by 3-5 fused vertebrae. Vestigial tail.', facts: ['Fused vertebrae: 3-5', 'Common name: Tailbone', 'Attachment: Pelvic floor muscles and ligaments'] },
+      'sternum': { name: 'Sternum (Breastbone)', type: 'Axial — Thorax', desc: 'Flat bone in the center of the chest. Has three parts: manubrium, body, and xiphoid process.', facts: ['Parts: Manubrium, Body, Xiphoid process', 'Articulates with: Clavicles, Ribs 1-7', 'CPR landmark (body of sternum)'] },
+      'manubrium': { name: 'Manubrium', type: 'Axial — Sternum', desc: 'Superior portion of the sternum articulating with the clavicles and first ribs.', facts: ['Location: Superior sternum', 'Feature: Jugular (suprasternal) notch', 'Articulates with: Clavicles, 1st rib pair'] },
+      'rib': { name: 'Rib', type: 'Axial — Thorax', desc: '12 pairs of curved bones protecting thoracic organs. True ribs (1-7), false ribs (8-10), floating ribs (11-12).', facts: ['Total: 12 pairs (24 ribs)', 'True ribs 1-7: Direct sternal attachment', 'Floating ribs 11-12: No anterior connection'] },
+      'ribs': { name: 'Ribs', type: 'Axial — Thorax', desc: '12 pairs of curved bones forming the ribcage to protect heart and lungs.', facts: ['True ribs (1-7): Attach directly to sternum', 'False ribs (8-10): Indirect cartilage attachment', 'Floating ribs (11-12): Free anterior ends'] },
+      'clavicle': { name: 'Clavicle (Collarbone)', type: 'Appendicular — Shoulder', desc: 'S-shaped bone connecting the sternum to the scapula. Most commonly fractured bone.', facts: ['Common name: Collarbone', 'Most frequently fractured bone in body', 'Only horizontal long bone', 'Function: Strut connecting arm to trunk'] },
+      'scapula': { name: 'Scapula (Shoulder Blade)', type: 'Appendicular — Shoulder', desc: 'Triangular flat bone on the posterior thorax with the glenoid cavity for the shoulder joint.', facts: ['Common name: Shoulder blade', 'Features: Acromion, Coracoid process, Glenoid cavity, Spine', '17 muscles attach to it'] },
+      'humerus': { name: 'Humerus (Upper Arm)', type: 'Appendicular — Arm', desc: 'The single bone of the upper arm connecting the shoulder to the elbow.', facts: ['Location: Upper arm', 'Proximal: Head (glenohumeral joint)', 'Distal: Trochlea and Capitulum (elbow)', 'Surgical neck: Common fracture site'] },
+      'radius': { name: 'Radius', type: 'Appendicular — Forearm', desc: 'Lateral (thumb-side) forearm bone. Rotates around the ulna for pronation/supination.', facts: ['Location: Lateral forearm (thumb side)', 'Distal: Styloid process, wrist joint', 'Allows: Forearm rotation'] },
+      'ulna': { name: 'Ulna', type: 'Appendicular — Forearm', desc: 'Medial (pinky-side) forearm bone. Forms the point of the elbow (olecranon).', facts: ['Location: Medial forearm (pinky side)', 'Proximal: Olecranon (elbow point)', 'Trochlear notch: Wrench-shaped elbow joint'] },
+      'carpal': { name: 'Carpal Bones (Wrist)', type: 'Appendicular — Wrist', desc: '8 small bones in two rows forming the wrist.', facts: ['Count: 8 per wrist', 'Proximal: Scaphoid, Lunate, Triquetrum, Pisiform', 'Distal: Trapezium, Trapezoid, Capitate, Hamate'] },
+      'carpals': { name: 'Carpal Bones (Wrist)', type: 'Appendicular — Wrist', desc: 'Eight small bones arranged in two rows. Most fractured: Scaphoid.', facts: ['Count: 8 per wrist (16 total)', 'Mnemonic: Some Lovers Try Positions That They Cannot Handle', 'Forms: Carpal tunnel'] },
+      'metacarpal': { name: 'Metacarpals (Palm)', type: 'Appendicular — Hand', desc: 'Five bones forming the palm, numbered I-V from thumb to little finger.', facts: ['Count: 5 per hand (10 total)', 'Connect carpals to phalanges', 'Metacarpal I: Shortest, most mobile (thumb)'] },
+      'phalanx': { name: 'Phalanx (Finger/Toe Bone)', type: 'Appendicular — Digits', desc: 'Individual finger or toe bone. 3 per digit (proximal, middle, distal) except thumb/big toe with 2.', facts: ['Per finger: 3 (proximal, middle, distal)', 'Thumb/big toe: 2 only', 'Total per hand: 14'] },
+      'phalanges': { name: 'Phalanges', type: 'Appendicular — Digits', desc: 'Bones of fingers and toes. Each has 3 segments except the thumb/big toe.', facts: ['Per hand: 14 phalanges', 'Per foot: 14 phalanges', 'Total in body: 56'] },
+      'pelvis': { name: 'Pelvis', type: 'Appendicular — Pelvic Girdle', desc: 'Basin formed by two hip bones, sacrum, and coccyx. Transfers upper body weight to lower limbs.', facts: ['Each hip bone: Ilium + Ischium + Pubis', 'Female pelvis: Wider for childbirth', 'Contains: Pelvic organs'] },
+      'ilium': { name: 'Ilium', type: 'Appendicular — Hip', desc: 'Largest part of the hip bone. The iliac crest is the bony ridge you can feel at your waist.', facts: ['Location: Superior hip bone', 'Key feature: Iliac crest', 'ASIS: Anterior Superior Iliac Spine (palpable landmark)'] },
+      'ischium': { name: 'Ischium', type: 'Appendicular — Hip', desc: 'Posterior-inferior hip bone. You sit on the ischial tuberosities.', facts: ['Key feature: Ischial tuberosity (sit bone)', 'You literally sit on this bone', 'Location: Posterior-inferior hip'] },
+      'pubis': { name: 'Pubis', type: 'Appendicular — Hip', desc: 'Anterior-inferior hip bone. The two pubic bones meet at the pubic symphysis.', facts: ['Key feature: Pubic symphysis (midline)', 'Joint type: Cartilaginous (fibrocartilage disc)', 'Location: Anterior-inferior hip'] },
+      'femur': { name: 'Femur (Thigh Bone)', type: 'Appendicular — Thigh', desc: 'The longest, heaviest, and strongest bone in the human body. Extends from hip to knee.', facts: ['LONGEST bone in the body', 'About 1/4 of total body height', 'Can support 30x body weight', 'Head: Ball of hip joint'] },
+      'patella': { name: 'Patella (Kneecap)', type: 'Appendicular — Knee', desc: 'Largest sesamoid bone, embedded in the quadriceps tendon. Protects the knee joint.', facts: ['Type: Sesamoid bone (within a tendon)', 'Increases quadriceps leverage by 30%', 'Develops around age 3-5'] },
+      'tibia': { name: 'Tibia (Shinbone)', type: 'Appendicular — Leg', desc: 'The larger weight-bearing bone of the lower leg. The medial malleolus forms the inner ankle bump.', facts: ['Weight-bearing bone of lower leg', 'Medial malleolus: Inner ankle bump', 'Second longest bone in body', 'Location: Medial (inner) leg'] },
+      'fibula': { name: 'Fibula', type: 'Appendicular — Leg', desc: 'Thinner lateral bone of the lower leg. Non-weight-bearing but forms the outer ankle.', facts: ['NON-weight-bearing', 'Lateral malleolus: Outer ankle bump', 'Function: Muscle attachment, ankle stability', 'Location: Lateral (outer) leg'] },
+      'tarsal': { name: 'Tarsal Bones (Ankle)', type: 'Appendicular — Foot', desc: 'Seven bones forming the ankle and proximal foot.', facts: ['Count: 7 per foot', 'Largest: Calcaneus (heel)', 'Talus: Weight transfer to calcaneus'] },
+      'tarsals': { name: 'Tarsal Bones (Ankle)', type: 'Appendicular — Foot', desc: 'Seven bones: Calcaneus, Talus, Navicular, Cuboid, 3 Cuneiforms.', facts: ['Count: 7 per foot (14 total)', 'Calcaneus: Heel bone (largest tarsal)', 'Talus: Articulates with tibia/fibula'] },
+      'calcaneus': { name: 'Calcaneus (Heel Bone)', type: 'Appendicular — Foot', desc: 'Largest tarsal bone forming the heel. Achilles tendon inserts here.', facts: ['Largest tarsal bone', 'Achilles tendon attachment point', 'Bears full body weight when standing'] },
+      'talus': { name: 'Talus', type: 'Appendicular — Foot', desc: 'Sits atop the calcaneus. Forms the ankle joint with tibia and fibula.', facts: ['Forms: Ankle (talocrural) joint', 'Unique: No muscle attachments', 'Weight transfer: Tibia to calcaneus'] },
+      'metatarsal': { name: 'Metatarsals', type: 'Appendicular — Foot', desc: 'Five long bones forming the midfoot, creating the arch.', facts: ['Count: 5 per foot (10 total)', 'Form: Longitudinal arch of foot', 'Metatarsal I: Thickest (big toe side)'] },
+      'metatarsals': { name: 'Metatarsals', type: 'Appendicular — Foot', desc: 'Five bones connecting tarsals to toe phalanges.', facts: ['Count: 5 per foot (10 total)', 'Function: Foot arch structure', 'Stress fractures common in runners'] },
+    };
+
+    // ─── Fuzzy Bone Name Matcher ───
+    function identifyBone(rawName) {
+      if (!rawName) return null;
+      var name = rawName.toLowerCase().replace(/[_\-\.]/g, ' ').replace(/\d+/g, '').replace(/\s+/g, ' ').trim();
+
+      // Direct key match
+      for (var key in BONE_DB) {
+        if (name.indexOf(key) !== -1) return BONE_DB[key];
+      }
+
+      // Keyword mapping
+      var keywords = {
+        'skull': 'skull', 'cranium': 'cranium', 'head': 'skull',
+        'jaw': 'mandible', 'mandib': 'mandible', 'maxil': 'maxilla',
+        'front': 'frontal', 'pariet': 'parietal', 'tempor': 'temporal',
+        'occipit': 'occipital', 'sphen': 'sphenoid', 'ethm': 'ethmoid',
+        'zygom': 'zygomatic', 'cheek': 'zygomatic',
+        'hyoid': 'hyoid',
+        'spine': 'vertebra', 'verteb': 'vertebra',
+        'cervic': 'cervical', 'neck': 'cervical',
+        'thorac': 'thoracic', 'lumba': 'lumbar',
+        'sacr': 'sacrum', 'coccy': 'coccyx', 'tailbone': 'coccyx',
+        'stern': 'sternum', 'breast': 'sternum', 'manu': 'manubrium',
+        'rib': 'rib', 'costa': 'rib',
+        'clavic': 'clavicle', 'collar': 'clavicle',
+        'scapul': 'scapula', 'shoulder': 'scapula',
+        'humer': 'humerus', 'upper arm': 'humerus',
+        'radi': 'radius', 'ulna': 'ulna', 'olecran': 'ulna',
+        'carp': 'carpals', 'wrist': 'carpals',
+        'metacarp': 'metacarpal',
+        'phalan': 'phalanges', 'finger': 'phalanges', 'toe': 'phalanges',
+        'pelv': 'pelvis', 'hip': 'pelvis', 'innominate': 'pelvis',
+        'ili': 'ilium', 'ischi': 'ischium', 'pub': 'pubis',
+        'femur': 'femur', 'femor': 'femur', 'thigh': 'femur',
+        'patell': 'patella', 'knee': 'patella',
+        'tibi': 'tibia', 'shin': 'tibia',
+        'fibul': 'fibula',
+        'tars': 'tarsals', 'ankle': 'tarsals',
+        'calcan': 'calcaneus', 'heel': 'calcaneus',
+        'talus': 'talus',
+        'metatars': 'metatarsals',
+      };
+
+      for (var kw in keywords) {
+        if (name.indexOf(kw) !== -1) return BONE_DB[keywords[kw]];
+      }
+
+      // Fallback — show cleaned mesh name
+      var cleanName = rawName.replace(/[_\-\.]/g, ' ').replace(/\d+/g, '').replace(/\s+/g, ' ').trim();
+      cleanName = cleanName.split(' ').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+      return {
+        name: cleanName || rawName,
+        type: 'Skeletal Structure',
+        desc: 'Part of the human skeletal system. Zoom in to examine this bone closely.',
+        facts: ['Mesh: ' + rawName]
+      };
+    }
+
+    // ─── UI ───
+    var tooltip = document.getElementById('bone-tooltip');
+    var panel = document.getElementById('bone-info-panel');
+    var counter = document.getElementById('bone-counter');
+    var loadingOverlay = document.getElementById('loading-overlay');
+    var clickCount = 0;
+    var tooltipTimer = null;
+
+    function showTooltip(boneInfo, x, y) {
+      tooltip.innerHTML = '<span>🦴 ' + boneInfo.name + '</span><span class="bone-label">' + boneInfo.type + '</span>';
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+      tooltip.style.display = 'block';
+      if (tooltipTimer) clearTimeout(tooltipTimer);
+      tooltipTimer = setTimeout(function() { tooltip.style.display = 'none'; }, 5000);
+    }
+
+    function showPanel(boneInfo) {
+      document.getElementById('panel-bone-name').textContent = boneInfo.name;
+      document.getElementById('panel-bone-type').textContent = boneInfo.type;
+      document.getElementById('panel-bone-desc').textContent = boneInfo.desc;
+      var factsList = document.getElementById('panel-bone-facts');
+      factsList.innerHTML = boneInfo.facts.map(function(f) {
+        var parts = f.split(':');
+        if (parts.length > 1) return '<li><strong>' + parts[0] + ':</strong>' + parts.slice(1).join(':') + '</li>';
+        return '<li>' + f + '</li>';
+      }).join('');
+      panel.classList.add('active');
+    }
+
+    // ─── Sketchfab Viewer API Init ───
+    var iframe = document.getElementById('api-frame');
+    var uid = '11c3e7ccf872481dbfd35f32756a8e4c';
+    var nodeMap = {};  // nodeID -> node name
+
+    var client = new Sketchfab(iframe);
+    client.init(uid, {
+      success: function(api) {
+        api.start();
+        api.addEventListener('viewerready', function() {
+          loadingOverlay.classList.add('hidden');
+
+          // Build node map: nodeID -> name
+          api.getNodeMap(function(err, nodes) {
+            if (!err) {
+              for (var id in nodes) {
+                if (nodes[id] && nodes[id].name) {
+                  nodeMap[id] = nodes[id].name;
+                }
+              }
+              counter.textContent = '🦴 ' + Object.keys(nodeMap).length + ' bones loaded — click to identify';
+            }
+          });
+
+          // Click handler — use nodeID to look up bone name
+          api.addEventListener('click', function(info) {
+            var rawName = null;
+
+            // Try nodeID first (most reliable)
+            if (info && info.nodeID !== undefined && nodeMap[info.nodeID]) {
+              rawName = nodeMap[info.nodeID];
+            }
+            // Fallback: instance name
+            else if (info && info.instance && info.instance.name) {
+              rawName = info.instance.name;
+            }
+            // Fallback: position-based (show generic msg)
+            else if (info && info.position3D) {
+              rawName = 'skeleton';
+            }
+
+            if (rawName) {
+              var boneInfo = identifyBone(rawName);
+              clickCount++;
+              counter.textContent = '🦴 ' + boneInfo.name + '  (' + clickCount + ' clicks)';
+
+              // Position tooltip near click point
+              var rect = iframe.getBoundingClientRect();
+              var sx = info.position2D ? info.position2D[0] : (rect.width / 2);
+              var sy = info.position2D ? info.position2D[1] : (rect.height / 2);
+              showTooltip(boneInfo, sx, sy);
+              showPanel(boneInfo);
+            }
+          });
+        });
+      },
+      error: function() {
+        loadingOverlay.innerHTML = '<p style="color:#ef4444;">Failed to load. Please refresh.</p>';
+      },
+      autostart: 1,
+      preload: 1,
+      ui_stop: 0,
+      ui_inspector: 0,
+      ui_watermark: 0,
+      ui_color: '6366f1',
+      transparent: 0,
+      dnt: 1,
+    });
+  </script>
+</body>
+</html>

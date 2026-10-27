@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="boneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdfbf7"/>
+      <stop offset="60%" stop-color="#ede4d4"/>
+      <stop offset="100%" stop-color="#d0c3ab"/>
+    </linearGradient>
+    <filter id="skullShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <!-- Cranium Outline -->
+  <path d="M 45 95 C 38 55, 65 25, 100 25 C 135 25, 162 55, 155 95 C 152 112, 146 120, 142 130 C 136 134, 132 142, 130 152 C 128 165, 120 175, 100 175 C 80 175, 72 165, 70 152 C 68 142, 64 134, 58 130 C 54 120, 48 112, 45 95 Z" fill="url(#boneGrad)" filter="url(#skullShadow)"/>
+  <!-- Temporal / Suture Lines -->
+  <path d="M 100 26 Q 102 50 100 68" stroke="#c0b196" stroke-width="1.5" stroke-dasharray="2,2" fill="none"/>
+  <path d="M 68 45 Q 100 58 132 45" stroke="#c0b196" stroke-width="1.5" stroke-dasharray="2,2" fill="none"/>
+  <!-- Eye Orbits -->
+  <ellipse cx="74" cy="98" rx="14" ry="16" fill="#2b2d42"/>
+  <ellipse cx="126" cy="98" rx="14" ry="16" fill="#2b2d42"/>
+  <!-- Nasal Cavity -->
+  <path d="M 100 108 L 94 125 L 100 128 L 106 125 Z" fill="#2b2d42"/>
+  <!-- Zygomatic Arch highlights -->
+  <path d="M 50 115 Q 58 128 70 128" stroke="#c0b196" stroke-width="2" fill="none"/>
+  <path d="M 150 115 Q 142 128 130 128" stroke="#c0b196" stroke-width="2" fill="none"/>
+  <!-- Maxilla / Teeth -->
+  <rect x="82" y="142" width="7" height="10" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="91" y="142" width="8" height="10" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="101" y="142" width="8" height="10" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="111" y="142" width="7" height="10" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <!-- Mandible Teeth -->
+  <rect x="84" y="154" width="7" height="9" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="92" y="154" width="7" height="9" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="101" y="154" width="7" height="9" rx="2" fill="#fff" stroke="#d0c3ab"/>
+  <rect x="109" y="154" width="7" height="9" rx="2" fill="#fff" stroke="#d0c3ab"/>
+</svg>

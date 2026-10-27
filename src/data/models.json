@@ -1,0 +1,398 @@
+[
+  {
+    "id": "body",
+    "name": "Full Human Body & Skeleton",
+    "category": "Whole Body System",
+    "icon": "🧍",
+    "previewImage": "/previews/body.svg",
+    "description": "Explore the complete human body anatomical framework, axial and appendicular skeleton, and organ spatial relationships.",
+    "structureGroups": {
+      "Axial Skeleton": [
+        "Cranium & Facial Skeleton (22 bones)",
+        "Vertebral Column (Cervical, Thoracic, Lumbar, Sacrum, Coccyx)",
+        "Thoracic Cage (Sternum, 12 pairs of Ribs, Costal cartilage)"
+      ],
+      "Appendicular Skeleton": [
+        "Pectoral Girdle (Clavicle, Scapula)",
+        "Upper Limbs (Humerus, Radius, Ulna, Carpals, Metacarpals, Phalanges)",
+        "Pelvic Girdle (Ilium, Ischium, Pubis)",
+        "Lower Limbs (Femur, Patella, Tibia, Fibula, Tarsals, Metatarsals, Phalanges)"
+      ],
+      "Major Organ Cavities": [
+        "Cranial Cavity (Brain & Meninges)",
+        "Thoracic Cavity (Heart, Pericardium, Lungs, Pleural cavities)",
+        "Abdominopelvic Cavity (Stomach, Liver, Kidneys, Pancreas, Intestines)"
+      ]
+    },
+    "viewerId": "11b57ebfcf6c4e3b88d0cbe618ee70a7",
+    "author": "projectkaizen (CC-BY-4.0)",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/male-skeleton-11b57ebfcf6c4e3b88d0cbe618ee70a7"
+  },
+
+  {
+    "id": "heart",
+    "name": "Human Heart (Cross-Section & Animation)",
+    "category": "Visceral Systems",
+    "icon": "♥",
+    "previewImage": "/previews/heart.svg",
+    "description": "A realistic cross-sectional 3D model of the human heart showcasing internal anatomy, numbered anatomical landmarks, and synchronized beating biomechanics.",
+    "structureGroups": {
+      "Numbered Cross-Section Landmarks": [
+        "1. Superior Vena Cava (Venous return)",
+        "2. Ascending Aorta & Arch (Systemic outflow)",
+        "3. Right Ventricular Cavity",
+        "4. Left Ventricular Cavity (Thick wall)",
+        "5. Interventricular Septum (Apex region)",
+        "6. Tricuspid Valve & Chordae Tendineae",
+        "7. Mitral (Bicuspid) Valve & Papillary muscles",
+        "8. Pulmonary Trunk & Valve",
+        "10. Right Atrium & Pectinate muscles"
+      ],
+      "Internal Chambers & Cavities": [
+        "Right Atrium (Deoxygenated systemic return)",
+        "Right Ventricle (Pulmonary arterial outflow)",
+        "Left Atrium (Receives 4 pulmonary veins)",
+        "Left Ventricle (High-pressure systemic pump)",
+        "Interventricular Septum"
+      ],
+      "Valves & Biomechanical Action": [
+        "Tricuspid Atrioventricular Valve",
+        "Mitral / Bicuspid Valve",
+        "Aortic Semilunar Valve",
+        "Pulmonary Semilunar Valve",
+        "Synchronized Cardiac Cycle (Systole / Diastole)"
+      ],
+      "Great Vessels & Perfusion": [
+        "Ascending Aorta & Brachiocephalic branches",
+        "Pulmonary Arteries & Trunk",
+        "Superior & Inferior Vena Cava",
+        "Coronary Sulcus & Myocardial Circulation"
+      ]
+    },
+    "author": "brice.R",
+    "license": "CC-BY-4.0 / Educational",
+    "viewerId": "0acf946a98ca40908f40cc3c402f1bc7",
+    "sourceUrl": "https://sketchfab.com/3d-models/cutted-heart-simulation-0acf946a98ca40908f40cc3c402f1bc7"
+  },
+  {
+    "id": "brain",
+    "name": "Brain",
+    "category": "Nervous System",
+    "icon": "◉",
+    "previewImage": "/previews/brain.svg",
+    "description": "Review the major brain regions and cranial structures.",
+    "structureGroups": {
+      "Major regions": [
+        "Frontal lobe",
+        "Parietal lobe",
+        "Temporal lobe",
+        "Occipital lobe"
+      ],
+      "Core structures": [
+        "Cerebellum",
+        "Brainstem",
+        "Thalamus",
+        "Hypothalamus"
+      ],
+      "Connections": [
+        "Corpus callosum",
+        "Spinal cord",
+        "Cranial nerves",
+        "Ventricles"
+      ]
+    },
+    "viewerId": "82d87cb89d6c48f0984a59c4f2a4cf9a",
+    "author": "Open Anatomy (CC-BY-4.0)",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/human-brain-82d87cb89d6c48f0984a59c4f2a4cf9a"
+  },
+  {
+    "id": "skull",
+    "name": "Skull",
+    "category": "Musculoskeletal",
+    "icon": "◇",
+    "previewImage": "/previews/skull.svg",
+    "description": "Study the cranium, facial skeleton, jaw, and openings.",
+    "structureGroups": {
+      "Cranium": [
+        "Frontal bone",
+        "Parietal bones",
+        "Temporal bones",
+        "Occipital bone"
+      ],
+      "Face": [
+        "Maxilla",
+        "Mandible",
+        "Nasal bones",
+        "Zygomatic bones"
+      ],
+      "Landmarks": [
+        "Orbit",
+        "Nasal cavity",
+        "Foramen magnum",
+        "Temporomandibular joint"
+      ]
+    },
+    "viewerId": "d1d1aed420424c8db784391ad8261a2f",
+    "author": "Center for BioMedical Visualization, SGU",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/human-skull-d1d1aed420424c8db784391ad8261a2f"
+  },
+  {
+    "id": "skin",
+    "name": "Human Skin",
+    "category": "Integumentary System",
+    "icon": "○",
+    "previewImage": "/previews/skin.svg",
+    "description": "Explore the layers and appendages of the integumentary system.",
+    "structureGroups": {
+      "Layers": [
+        "Stratum corneum",
+        "Epidermis",
+        "Dermis",
+        "Hypodermis"
+      ],
+      "Appendages": [
+        "Hair shaft",
+        "Hair follicle",
+        "Sebaceous gland",
+        "Sweat gland"
+      ],
+      "Support": [
+        "Blood vessels",
+        "Sensory receptors",
+        "Arrector pili muscle",
+        "Subcutaneous tissue"
+      ]
+    },
+    "viewerId": "2c902649de1843e9b2e004a99a9ab923",
+    "author": "Ebers (CC-BY-4.0)",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/skin-layers-2c902649de1843e9b2e004a99a9ab923"
+  },
+  {
+    "id": "vein",
+    "name": "Vein and Artery",
+    "category": "Circulatory System",
+    "icon": "↔",
+    "previewImage": "/previews/vein.svg",
+    "description": "Compare vessel walls, lumens, and the direction of blood flow.",
+    "structureGroups": {
+      "Artery": [
+        "Tunica intima",
+        "Tunica media",
+        "Tunica externa",
+        "Arterial lumen"
+      ],
+      "Vein": [
+        "Venous valve",
+        "Thin muscular wall",
+        "Tunica externa",
+        "Venous lumen"
+      ],
+      "Study points": [
+        "Oxygenated blood",
+        "Deoxygenated blood",
+        "Pressure difference",
+        "Flow direction"
+      ]
+    },
+    "viewerId": "c26e0f2e75fe4087aa8c4ecee2cad1aa",
+    "author": "CB3D",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/vein-and-artery-c26e0f2e75fe4087aa8c4ecee2cad1aa"
+  },
+  {
+    "id": "neuron",
+    "name": "Stellate Neuron",
+    "category": "Nervous System",
+    "icon": "✦",
+    "previewImage": "/previews/neuron.svg",
+    "description": "Identify the parts that receive, process, and transmit nerve signals.",
+    "structureGroups": {
+      "Cell body": [
+        "Nucleus",
+        "Soma",
+        "Axon hillock",
+        "Nissl bodies"
+      ],
+      "Signal reception": [
+        "Dendrites",
+        "Dendritic spines",
+        "Synaptic input",
+        "Receptor sites"
+      ],
+      "Signal transmission": [
+        "Axon",
+        "Myelin sheath",
+        "Nodes of Ranvier",
+        "Axon terminals"
+      ]
+    },
+    "viewerId": "6ef85cb9061a4ef2abb9e87258c7d0fb",
+    "author": "PIExr",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/stellate-neuron-6ef85cb9061a4ef2abb9e87258c7d0fb"
+  },
+  {
+    "id": "eye",
+    "name": "Complete Eye",
+    "category": "Sensory System",
+    "icon": "◎",
+    "previewImage": "/previews/eye.svg",
+    "description": "Explore the original complete optical layers, extraocular muscle attachments, and connections involved in vision.",
+    "structureGroups": {
+      "Optical path": [
+        "Cornea",
+        "Pupil",
+        "Lens",
+        "Retina"
+      ],
+      "Coats": [
+        "Sclera",
+        "Choroid",
+        "Ciliary body",
+        "Iris"
+      ],
+      "Connections": [
+        "Optic nerve",
+        "Macula",
+        "Vitreous body",
+        "Extraocular muscles"
+      ]
+    },
+    "viewerId": "6529d87d70604e37b6a15ec70c173b96",
+    "author": "3D4SCI",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/complete-eye-6529d87d70604e37b6a15ec70c173b96"
+  },
+  {
+    "id": "stomach",
+    "name": "Stomach",
+    "category": "Digestive System",
+    "icon": "◒",
+    "previewImage": "/previews/stomach.svg",
+    "description": "Study the stomach regions, wall layers, and digestive pathway.",
+    "structureGroups": {
+      "Regions": [
+        "Cardia",
+        "Fundus",
+        "Body",
+        "Pylorus"
+      ],
+      "Wall layers": [
+        "Mucosa",
+        "Submucosa",
+        "Muscularis",
+        "Serosa"
+      ],
+      "Connections": [
+        "Esophagus",
+        "Pyloric sphincter",
+        "Duodenum",
+        "Gastric folds"
+      ]
+    },
+    "viewerId": "40147c529bdb42c7a2fca1fbd6529a89",
+    "author": "Ebers",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/stomach-40147c529bdb42c7a2fca1fbd6529a89"
+  },
+  {
+    "id": "kidney",
+    "name": "Kidney",
+    "category": "Urinary System",
+    "icon": "◓",
+    "previewImage": "/previews/kidney.svg",
+    "description": "Review the kidney regions and the route taken by urine.",
+    "structureGroups": {
+      "Outer regions": [
+        "Renal capsule",
+        "Renal cortex",
+        "Renal medulla",
+        "Renal columns"
+      ],
+      "Internal structures": [
+        "Renal pyramids",
+        "Renal papilla",
+        "Minor calyx",
+        "Major calyx"
+      ],
+      "Drainage": [
+        "Renal pelvis",
+        "Ureter",
+        "Renal artery",
+        "Renal vein"
+      ]
+    },
+    "viewerId": "1fb2ea2ba18241b3be8affbcce5cd364",
+    "author": "University of Dundee",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/kidney-1fb2ea2ba18241b3be8affbcce5cd364"
+  },
+  {
+    "id": "pancreas",
+    "name": "Pancreas",
+    "category": "Digestive System",
+    "icon": "▰",
+    "previewImage": "/previews/pancreas.svg",
+    "description": "Explore the pancreatic regions and its digestive and endocrine roles.",
+    "structureGroups": {
+      "Regions": [
+        "Head",
+        "Neck",
+        "Body",
+        "Tail"
+      ],
+      "Digestive role": [
+        "Pancreatic duct",
+        "Acinar cells",
+        "Digestive enzymes",
+        "Duodenum connection"
+      ],
+      "Endocrine role": [
+        "Islets of Langerhans",
+        "Insulin",
+        "Glucagon",
+        "Capillary network"
+      ]
+    },
+    "viewerId": "58cf045dce9a45e9b08235bc26209aa3",
+    "author": "Legatobach",
+    "license": "CC-BY-4.0",
+    "sourceUrl": "https://sketchfab.com/3d-models/pancreas-58cf045dce9a45e9b08235bc26209aa3"
+  },
+  {
+    "id": "ear",
+    "name": "Inner Ear",
+    "category": "Sensory System",
+    "icon": "◌",
+    "previewImage": "/previews/ear.svg",
+    "description": "Identify the structures responsible for hearing and balance. A dedicated verified viewer model is not currently available in the original project.",
+    "structureGroups": {
+      "Hearing": [
+        "Cochlea",
+        "Organ of Corti",
+        "Malleus",
+        "Incus"
+      ],
+      "Balance": [
+        "Semicircular canals",
+        "Vestibule",
+        "Utricle",
+        "Saccule"
+      ],
+      "Connections": [
+        "Stapes",
+        "Oval window",
+        "Round window",
+        "Auditory nerve"
+      ]
+    },
+    "author": "University of Dundee School of Medicine",
+    "license": "CC-BY-4.0",
+    "viewerId": "f80bda64666c4b8aaac8f63b7b82a0a0",
+    "sourceUrl": "https://sketchfab.com/3d-models/anatomy-of-the-inner-ear-f80bda64666c4b8aaac8f63b7b82a0a0"
+  }
+]

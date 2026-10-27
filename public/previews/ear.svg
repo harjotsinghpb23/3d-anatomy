@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="earGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#90e0ef"/>
+      <stop offset="50%" stop-color="#48cae4"/>
+      <stop offset="100%" stop-color="#0077b6"/>
+    </linearGradient>
+    <linearGradient id="boneLaby" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa"/>
+      <stop offset="100%" stop-color="#dee2e6"/>
+    </linearGradient>
+    <filter id="earShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <!-- Semicircular Canals (Balance) -->
+  <g filter="url(#earShadow)">
+    <!-- Anterior/Superior Canal -->
+    <path d="M 95 85 C 80 40, 130 30, 135 75" stroke="url(#earGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <!-- Posterior Canal -->
+    <path d="M 125 78 C 160 70, 168 115, 132 110" stroke="url(#earGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <!-- Lateral/Horizontal Canal -->
+    <path d="M 115 85 C 145 92, 135 120, 110 105" stroke="url(#earGrad)" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <!-- Vestibule Ampullae -->
+    <circle cx="95" cy="85" r="7" fill="#0096c7"/>
+    <circle cx="132" cy="85" r="7" fill="#0096c7"/>
+    <circle cx="118" cy="102" r="8" fill="#0077b6"/>
+  </g>
+  <!-- Cochlea (Hearing Spiral) -->
+  <g filter="url(#earShadow)">
+    <path d="M 115 105 C 95 110, 75 100, 68 120 C 60 142, 85 165, 110 155 C 130 145, 130 125, 115 120 C 100 115, 95 130, 102 135" stroke="url(#earGrad)" stroke-width="8" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- Auditory / Vestibulocochlear Nerve -->
+  <path d="M 115 102 Q 60 88 35 90" stroke="#f4a261" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M 100 135 Q 55 115 35 95" stroke="#f4a261" stroke-width="4" stroke-linecap="round" fill="none"/>
+</svg>

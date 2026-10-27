@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>3D Viewer - External Model</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <style>
+        body { 
+            margin: 0; overflow: hidden; background-color: #000000;
+            font-family: 'Inter', sans-serif; user-select: none;
+        }
+
+        #model-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; border: none;
+        }
+        
+        iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* --- UI Overlay --- */
+        #ui-layer {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 12px; z-index: 10;
+            background: rgba(30, 30, 30, 0.6); padding: 12px 24px; border-radius: 20px;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.3s ease;
+        }
+        
+        body.cinema-mode #ui-layer { opacity: 0; pointer-events: none; }
+
+        .btn {
+            background: transparent; border: none; color: rgba(255, 255, 255, 0.6); 
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; 
+            padding: 4px 8px; border-radius: 8px; transition: all 0.2s;
+        }
+        .btn:hover { color: white; background: rgba(255,255,255,0.1); }
+        .btn span { font-size: 22px; margin-bottom: 2px; }
+        .btn label { font-size: 9px; font-weight: 500; text-transform: uppercase; }
+        .separator { width: 1px; height: 30px; background: rgba(255,255,255,0.15); margin: 0 5px; }
+
+        /* --- Loader --- */
+        #loader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #64ffda; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #status { font-size: 12px; color: rgba(255,255,255,0.7); letter-spacing: 1px; }
+
+        .attribution {
+            position: absolute; bottom: 10px; right: 10px;
+            font-size: 10px; color: rgba(255,255,255,0.2);
+            z-index: 5; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <div id="status">INITIALIZING NEURAL LINK...</div>
+    </div>
+
+    <div id="model-container">
+        <iframe id="sketchfab-frame" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share></iframe>
+    </div>
+    
+    <div class="attribution" id="attribution-text">Model by Sketchfab</div>
+
+    <div id="ui-layer">
+        <button class="btn" onclick="toggleCinema()">
+            <span class="material-icons-round">fullscreen</span>
+            <label>Cinema</label>
+        </button>
+        <div class="separator"></div>
+        <button class="btn" onclick="resetViewer()">
+            <span class="material-icons-round">restart_alt</span>
+            <label>Reset</label>
+        </button>
+        <div class="separator"></div>
+        <button class="btn" onclick="window.history.back()">
+             <span class="material-icons-round" style="transform: rotate(180deg);">logout</span>
+             <label>Exit</label>
+        </button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION: Add new models here ---
+        const models = {
+            'vein': {
+                id: 'c26e0f2e75fe4087aa8c4ecee2cad1aa', // Medical view - Vein + Artery
+                author: 'CB3D'
+            },
+            'neuron': {
+                id: '6ef85cb9061a4ef2abb9e87258c7d0fb', // Stellate Neuron Example 1
+                author: 'PIExr'
+            },
+            // Fallback default
+            'default': {
+                id: 'c26e0f2e75fe4087aa8c4ecee2cad1aa',
+                author: 'CB3D'
+            }
+        };
+
+        // --- 1. Detect Model from URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        // The index.html sends ?model=neuron or ?model=vein
+        const modelKey = urlParams.get('model'); 
+        
+        // Select model data (or fallback to default if key not found)
+        const selectedModel = models[modelKey] || models['default'];
+
+        // --- 2. Inject Iframe Source ---
+        const iframe = document.getElementById('sketchfab-frame');
+        // We add parameters for dark theme, autostart, and removing UI clutter
+        iframe.src = `https://sketchfab.com/models/${selectedModel.id}/embed?autostart=1&ui_theme=dark&ui_infos=0&ui_watermark=0&ui_controls=1`;
+        
+        // Update Attribution
+        document.getElementById('attribution-text').innerText = `Model by ${selectedModel.author}`;
+
+
+        // --- 3. UI Logic ---
+        const loader = document.getElementById('loader');
+
+        // Note: Sketchfab embeds don't always fire 'onload' perfectly for every state,
+        // but this ensures the loader fades out after a reasonable connection time.
+        iframe.onload = function() {
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1500); 
+        };
+
+        window.toggleCinema = function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.body.classList.add('cinema-mode');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.body.classList.remove('cinema-mode');
+                }
+            }
+        };
+
+        window.resetViewer = function() {
+            loader.style.display = 'flex';
+            loader.style.opacity = '1';
+            iframe.src = iframe.src; // Reloads iframe to reset camera
+        };
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) document.body.classList.remove('cinema-mode');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pancGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6bd60"/>
+      <stop offset="60%" stop-color="#e9a03f"/>
+      <stop offset="100%" stop-color="#cf7a29"/>
+    </linearGradient>
+    <linearGradient id="duoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f28482"/>
+      <stop offset="100%" stop-color="#d85a58"/>
+    </linearGradient>
+    <filter id="pancShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <!-- Duodenum C-Loop -->
+  <path d="M 130 35 C 160 35, 175 60, 170 100 C 165 140, 145 165, 115 165 L 115 145 C 135 145, 148 128, 150 100 C 152 72, 142 55, 125 55 Z" fill="url(#duoGrad)"/>
+  <!-- Common Bile Duct -->
+  <path d="M 125 25 Q 120 50 135 75" stroke="#588157" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Pancreas (Head, Body, Tail) -->
+  <path d="M 142 75 C 145 95, 138 118, 120 120 C 100 122, 75 110, 50 95 C 32 85, 25 78, 30 72 C 35 65, 55 72, 75 78 C 98 84, 120 72, 142 75 Z" fill="url(#pancGrad)" filter="url(#pancShadow)"/>
+  <!-- Lobular texture -->
+  <circle cx="132" cy="95" r="4" fill="#cf7a29" opacity="0.5"/>
+  <circle cx="122" cy="105" r="5" fill="#cf7a29" opacity="0.5"/>
+  <circle cx="95" cy="92" r="4.5" fill="#cf7a29" opacity="0.5"/>
+  <circle cx="68" cy="85" r="4" fill="#cf7a29" opacity="0.5"/>
+  <circle cx="45" cy="78" r="3.5" fill="#cf7a29" opacity="0.5"/>
+  <!-- Main Pancreatic Duct (Wirsung) -->
+  <path d="M 38 75 Q 85 85 132 95" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M 65 82 L 60 76" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M 90 87 L 88 80" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M 115 91 L 115 84" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.8"/>
+</svg>

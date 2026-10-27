@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cortexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c14953"/>
+      <stop offset="50%" stop-color="#9e2a2b"/>
+      <stop offset="100%" stop-color="#540b0e"/>
+    </linearGradient>
+    <linearGradient id="medullaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e07a5f"/>
+      <stop offset="100%" stop-color="#9e2a2b"/>
+    </linearGradient>
+    <filter id="kidneyShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <!-- Renal Artery & Vein -->
+  <path d="M 100 92 L 155 85 L 153 98 L 105 102 Z" fill="#e63946"/>
+  <path d="M 102 105 L 155 102 L 154 115 L 100 114 Z" fill="#457b9d"/>
+  <!-- Ureter -->
+  <path d="M 95 110 Q 112 125 115 175 L 105 175 Q 102 132 90 120 Z" fill="#f4a261"/>
+  <!-- Kidney Bean Organ -->
+  <path d="M 85 30 C 130 30, 155 60, 150 100 C 145 135, 120 170, 80 170 C 40 170, 35 125, 45 95 C 55 65, 50 30, 85 30 Z" fill="url(#cortexGrad)" filter="url(#kidneyShadow)"/>
+  <!-- Renal Medulla (Pyramids) -->
+  <path d="M 75 55 L 90 70 L 68 78 Z" fill="url(#medullaGrad)"/>
+  <path d="M 62 88 L 84 96 L 65 108 Z" fill="url(#medullaGrad)"/>
+  <path d="M 65 118 L 88 120 L 72 138 Z" fill="url(#medullaGrad)"/>
+  <path d="M 82 145 L 98 132 L 95 155 Z" fill="url(#medullaGrad)"/>
+  <!-- Renal Pelvis / Calyces -->
+  <path d="M 88 85 Q 98 100 88 125 Q 105 112 95 95 Z" fill="#ffe3d8" opacity="0.85"/>
+</svg>

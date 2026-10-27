@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e63946"/>
+      <stop offset="60%" stop-color="#b51724"/>
+      <stop offset="100%" stop-color="#7a0912"/>
+    </linearGradient>
+    <linearGradient id="aortaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f05355"/>
+      <stop offset="100%" stop-color="#c12128"/>
+    </linearGradient>
+    <linearGradient id="pulmGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#457b9d"/>
+      <stop offset="100%" stop-color="#1d3557"/>
+    </linearGradient>
+    <linearGradient id="vesselGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a90e2"/>
+      <stop offset="100%" stop-color="#1d599b"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <path d="M 68 28 L 68 75 L 85 75 L 85 28 Z" fill="url(#vesselGrad)"/>
+  <ellipse cx="76.5" cy="28" rx="8.5" ry="3" fill="#64a5f0"/>
+  <path d="M 125 55 Q 145 50 155 60 L 150 72 Q 140 65 125 68 Z" fill="url(#pulmGrad)"/>
+  <path d="M 45 65 Q 55 52 75 58 L 72 70 Q 58 64 45 75 Z" fill="url(#pulmGrad)"/>
+  <path d="M 90 70 C 85 45, 95 20, 118 20 C 140 20, 142 45, 136 68 L 118 68 C 122 50, 120 36, 115 36 C 105 36, 102 52, 104 70 Z" fill="url(#aortaGrad)"/>
+  <rect x="105" y="10" width="6" height="15" rx="3" fill="#f05355"/>
+  <rect x="116" y="8" width="6" height="17" rx="3" fill="#f05355"/>
+  <rect x="127" y="12" width="6" height="15" rx="3" fill="#f05355"/>
+  <path d="M 112 60 Q 110 75 102 92 L 88 84 Q 96 70 98 56 Q 106 58 112 60 Z" fill="url(#pulmGrad)"/>
+  <path d="M 72 75 C 50 78, 42 100, 46 122 C 52 145, 78 172, 102 188 C 126 172, 158 142, 160 115 C 162 90, 148 76, 125 76 C 112 76, 105 82, 100 88 C 95 80, 85 75, 72 75 Z" fill="url(#heartGrad)" filter="url(#shadow)"/>
+  <path d="M 52 86 C 48 98 52 112 60 118" stroke="#f26b6e" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M 104 90 Q 98 125 101 184" stroke="#ff4d5a" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M 103 100 Q 82 115 70 135" stroke="#ff4d5a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M 102 125 Q 120 135 132 150" stroke="#ff4d5a" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M 106 94 Q 101 128 103 182" stroke="#457b9d" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M 60 98 C 56 120 68 145 85 165" stroke="#ff9999" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4"/>
+</svg>
